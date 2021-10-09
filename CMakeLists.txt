@@ -1,0 +1,5 @@
+cmake_minimum_required (VERSION 3.10)
+set (CMAKE_CXX_STANDARD 17)
+project (kyokai-back-end)
+add_executable (kyokai-back-end src/main.cpp)
+include_directories (include)
