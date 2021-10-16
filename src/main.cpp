@@ -6,33 +6,25 @@
 
 using json = nlohmann::json;
 
-void spacer(string &first_target, string &last_target, json &targetjson) // targetjson: 目标json (string格式) target: 目标字符串 
+std::string lineswitcher(std::string &content, int line)
 {
-	int foundpos_1 = targetjson["text"].find_last_of(first_target);
-	string parsed_info_1 = targetjson["text"].substr(foundpos_1);
-	int foundpos_2 = parsed_info_1.find(last_target);
-	string parsed_info_2 = parsed_info_1.substr(0, foundpos_2);
-	// foundpos: 已经找到的字符串位置
-	return;
+    std::string ans = "";
+    for (int i = 1; i <= line; i ++)
+    {
+        int pos = content.find_last_of('\n');
+        ans = ans + content.substr(pos);
+        content = content.substr(0,pos);
+    }
+    return ans;
 }
 
 int main()
 {
 	cpr::Response r = cpr::Get(cpr::Url{"https://t.me/s/codeforces_official"});
-	json parser;
-	parser.parse(r.text);
-	std::cout << r.url << std::endl
-	       	  << r.status_code << std::endl
-		  << r.header["content-type"] << std::endl
-		  << r.text << std::endl;
-
-	int findpos = parser[text].find_last_of("<div class=\"tgme_widget_message_text js-message_text\" dir=\"auto\">");
-	string newest_info = parser[text].substr(findpos);
-
-	json outputform;
-	outputform = {
-		"tgme_widget_message": 
-	}
-	
+	std::string plain = r.text;
+	std::string converted = lineswitcher(plain, 32);
+	int divpos = converted.find("tgme_widget_message_text js-message_text");
+	int divslashpos = converted.find("tgme_widget_message_footer compact js-message_footer");
+	std::cout << converted.substr(divpos, divslashpos);
 	return 0;
 }
